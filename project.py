@@ -1,4 +1,6 @@
-import nltk
+from nltk import word_tokenize, sent_tokenize
 
-nltk.download('punkt')
-nltk.download('stopwords')
+text = input("Enter the text: ")
+
+print(sent_tokenize(text))
+print(word_tokenize(text))
