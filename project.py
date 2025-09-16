@@ -1,6 +1,9 @@
-from nltk import word_tokenize, sent_tokenize
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
-text = input("Enter the text: ")
+analyzer = SentimentIntensityAnalyzer()
 
-print(sent_tokenize(text))
-print(word_tokenize(text))
+text = input("Enter your text: ")
+
+score = analyzer.polarity_scores(text)
+
+print("Sentiment Score:", score["compound"])
