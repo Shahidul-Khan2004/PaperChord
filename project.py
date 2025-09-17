@@ -28,19 +28,27 @@ def add_keywords_to_sentiment(sentiment: str) -> str:
 
 def fetch_suggestions(str: str) -> list:
     """Fetch song suggestions from the iTunes API based on the given keyword."""
-    songs = []
-    response = requests.get(f"https://itunes.apple.com/search?term={str}&media=music&entity=song&limit=3")
-    json = response.json()
-    for result in json["results"]:
-        songs.append(
-            {
-                "trackName": result["trackName"],
-                "artistName": result["artistName"],
-                "trackViewUrl": result["trackViewUrl"],
-                "artworkUrl100": result["artworkUrl100"],
-            }
-        )
-    return songs
+    try:
+        songs = []
+        response = requests.get(f"https://itunes.apple.com/search?term={str}&media=music&entity=song&limit=3")
+
+        json = response.json()
+        for result in json["results"]:
+            songs.append(
+                {
+                    "trackName": result["trackName"],
+                    "artistName": result["artistName"],
+                    "trackViewUrl": result["trackViewUrl"],
+                    "artworkUrl100": result["artworkUrl100"],
+                }
+            )
+        return songs
+    except requests.RequestException as e:
+        print(f"Itunes not responding: {e}")
+        return []
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return []
 
 
 if __name__ == "__main__":
