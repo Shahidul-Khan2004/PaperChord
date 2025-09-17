@@ -31,22 +31,27 @@ def test_analyze_sentiment_boundary_negative():
     assert project.analyze_sentiment("This is bad") == "Negative"
 
 
-def test_add_keywords_to_sentiment_positive():
-    """Test that positive sentiment returns valid positive keywords."""
+def test_add_keywords_to_sentiment():
+    """Test that keywords are assigned correctly for each sentiment."""
     positive_keywords = ["good mood", "happy", "chill vibes", "feel good", "relaxing"]
-    result = project.add_keywords_to_sentiment("Positive")
-    assert result in positive_keywords
-
-
-def test_add_keywords_to_sentiment_negative():
-    """Test that negative sentiment returns valid negative keywords."""
     negative_keywords = ["sad song", "blue", "heart break", "memories"]
-    result = project.add_keywords_to_sentiment("Negative")
-    assert result in negative_keywords
-
-
-def test_add_keywords_to_sentiment_neutral():
-    """Test that neutral sentiment returns valid neutral keywords."""
     neutral_keywords = ["inspo", "lofi", "nature", "mood", "calm"]
-    result = project.add_keywords_to_sentiment("Neutral")
-    assert result in neutral_keywords
+
+    assert project.add_keywords_to_sentiment("Positive") in positive_keywords
+    assert project.add_keywords_to_sentiment("Negative") in negative_keywords
+    assert project.add_keywords_to_sentiment("Neutral") in neutral_keywords
+
+
+def test_fetch_suggestions_basic():
+    """Test fetch_suggestions returns proper structure with real API call."""
+    result = project.fetch_suggestions("happy")
+
+    assert isinstance(result, list)
+    assert len(result) <= 3
+
+    for song in result:
+        assert isinstance(song, dict)
+        assert "song" in song
+        assert "artist" in song
+        assert "url" in song
+        assert "thumbnail" in song
