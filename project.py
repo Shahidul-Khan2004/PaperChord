@@ -36,10 +36,10 @@ def fetch_suggestions(str: str) -> list:
         for result in json["results"]:
             songs.append(
                 {
-                    "trackName": result["trackName"],
-                    "artistName": result["artistName"],
-                    "trackViewUrl": result["trackViewUrl"],
-                    "artworkUrl100": result["artworkUrl100"],
+                    "song": result["trackName"],
+                    "artist": result["artistName"],
+                    "url": result["trackViewUrl"],
+                    "thumbnail": result["artworkUrl100"],
                 }
             )
         return songs
