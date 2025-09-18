@@ -25,14 +25,21 @@
     </section>
 
     <section>
-        <div>
-            <textarea class="centered-textarea" placeholder="Type your text here..." required></textarea>
-        </div>
+        <form action="" id="text-form">
+            <label for="text-input" name="text-input-label" id="text-input-label">Enter your text below: </label><br>
+            <textarea class="centered-textarea" id="text-input" placeholder="Type your text here..." required></textarea>
+            <span> <button type="submit" id="submit-button">Submit</button></span>
+            <span> <button type="button" id="clear-button">Clear</button></span>
+
+            <p id ="status" aria-live="polite"></p>
+        </form>
     </section>
 
+
     <footer>
-        <p>&copy; 2023 PaperChord. All rights reserved.</p>
+        <p>&copy; 2025 PaperChord. All rights reserved.</p>
     </footer>
+
 
 </body>
 
