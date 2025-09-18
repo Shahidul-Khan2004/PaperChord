@@ -18,7 +18,12 @@ def main():
 
 def analyze_sentiment(text: str) -> str:
     """Analyze the sentiment of the given text and return 'Positive', 'Negative', or 'Neutral'."""
-    analyzer = SentimentIntensityAnalyzer()
+    try:
+        analyzer = SentimentIntensityAnalyzer()
+    except LookupError:
+        import nltk
+        nltk.download("vader_lexicon")
+        analyzer = SentimentIntensityAnalyzer()
     score = analyzer.polarity_scores(text)
     if score["compound"] >= 0.25:
         return "Positive"
