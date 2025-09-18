@@ -1,4 +1,9 @@
- {
+body {
+
+    background-color: #669bbc;
+}
+
+#home {
 
     text-align: center;
     color : whitesmoke;
@@ -6,8 +11,8 @@
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
-body {
+#logo {
 
-    background-color: #669bbc;
-
+    color : whitesmoke;
+    text-decoration: none;
 }
