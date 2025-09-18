@@ -11,7 +11,7 @@ def main():
     args = parser.parse_args()
     res = fetch_suggestions(add_keywords_to_sentiment(analyze_sentiment(args.text)))
     if args.output:
-        with open(args.output, "w") as f:
+        with open(args.output, "w", encoding="utf-8") as f:
             json.dump(res, f, ensure_ascii=False)
     else:
         print(json.dumps(res, indent=2, ensure_ascii=False))
