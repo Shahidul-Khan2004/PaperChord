@@ -1,10 +1,15 @@
+import json
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import random
 import requests
+import argparse
 
 def main():
-    text = input("Enter your text: ")
-    print(fetch_suggestions(add_keywords_to_sentiment(analyze_sentiment(text))))
+    parser = argparse.ArgumentParser(description="Get song suggestions based on text.")
+    parser.add_argument("--text", type=str, help="Input text for song suggestions", required=True)
+    args = parser.parse_args()
+    res = fetch_suggestions(add_keywords_to_sentiment(analyze_sentiment(args.text)))
+    print(json.dumps(res, indent=2, ensure_ascii=False))
 
 def analyze_sentiment(text: str) -> str:
     """Analyze the sentiment of the given text and return 'Positive', 'Negative', or 'Neutral'."""
