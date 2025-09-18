@@ -7,9 +7,14 @@ import argparse
 def main():
     parser = argparse.ArgumentParser(description="Get song suggestions based on text.")
     parser.add_argument("--text", type=str, help="Input text for song suggestions", required=True)
+    parser.add_argument("--output", type=str, help="Output text for song suggestions")
     args = parser.parse_args()
     res = fetch_suggestions(add_keywords_to_sentiment(analyze_sentiment(args.text)))
-    print(json.dumps(res, indent=2, ensure_ascii=False))
+    if args.output:
+        with open(args.output, "w") as f:
+            json.dump(res, f, ensure_ascii=False)
+    else:
+        print(json.dumps(res, indent=2, ensure_ascii=False))
 
 def analyze_sentiment(text: str) -> str:
     """Analyze the sentiment of the given text and return 'Positive', 'Negative', or 'Neutral'."""
