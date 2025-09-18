@@ -1,10 +1,12 @@
+import json
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import random
 import requests
 
 def main():
     text = input("Enter your text: ")
-    print(fetch_suggestions(add_keywords_to_sentiment(analyze_sentiment(text))))
+    res = fetch_suggestions(add_keywords_to_sentiment(analyze_sentiment(text)))
+    print(json.dumps(res, indent=2, ensure_ascii=False))
 
 def analyze_sentiment(text: str) -> str:
     """Analyze the sentiment of the given text and return 'Positive', 'Negative', or 'Neutral'."""
