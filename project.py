@@ -45,16 +45,16 @@ def fetch_suggestions(str: str) -> list:
     """Fetch song suggestions from the iTunes API based on the given keyword."""
     try:
         songs = []
-        response = requests.get(f"https://itunes.apple.com/search?term={str}&media=music&entity=song&limit=3")
-
-        json = response.json()
-        for result in json["results"]:
+        response = requests.get(f"https://itunes.apple.com/search?term={str}&media=music&entity=song&limit=3", timeout=12)
+        response.raise_for_status()
+        json_response = response.json()
+        for result in json_response["results"]:
             songs.append(
                 {
-                    "song": result["trackName"],
-                    "artist": result["artistName"],
-                    "url": result["trackViewUrl"],
-                    "thumbnail": result["artworkUrl100"],
+                    "song": result.get("trackName", "N/A"),
+                    "artist": result.get("artistName", "N/A"),
+                    "url": result.get("trackViewUrl", None),
+                    "thumbnail": result.get("artworkUrl100", None),
                 }
             )
         return songs
