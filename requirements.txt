@@ -1,2 +1,6 @@
 requests
 pytest
+nltk
+fastapi
+uvicorn
+pydantic
