@@ -3,6 +3,16 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import random
 import requests
 import argparse
+from functools import lru_cache
+
+@lru_cache(maxsize=1)
+def get_analyzer():
+    try:
+        return SentimentIntensityAnalyzer()
+    except LookupError:
+        import nltk
+        nltk.download("vader_lexicon")
+        return SentimentIntensityAnalyzer()
 
 def main():
     """
@@ -16,9 +26,9 @@ def main():
     parser = argparse.ArgumentParser(description="Get song suggestions based on text.")
     parser.add_argument("--text", type=str, help="Input text for song suggestions", required=True)
     parser.add_argument("--output", type=str, help="Output text for song suggestions")
-    parser.add_argument("--limit", type=int, help="Number of songs to get")
+    parser.add_argument("--limit", type=int, choices=range(1, 11), help="Number of songs to get (1-10)")
     args = parser.parse_args()
-    if args.limit and args.limit > 0:
+    if args.limit:
         res = fetch_suggestions(add_keywords_to_sentiment(analyze_sentiment(args.text)), args.limit)
     else:
         res = fetch_suggestions(add_keywords_to_sentiment(analyze_sentiment(args.text)))
@@ -42,12 +52,7 @@ def analyze_sentiment(text: str) -> str:
     str
         'Positive', 'Negative', or 'Neutral' based on sentiment analysis.
     """
-    try:
-        analyzer = SentimentIntensityAnalyzer()
-    except LookupError:
-        import nltk
-        nltk.download("vader_lexicon")
-        analyzer = SentimentIntensityAnalyzer()
+    analyzer = get_analyzer()
     score = analyzer.polarity_scores(text)
     if score["compound"] >= 0.25:
         return "Positive"
@@ -95,10 +100,13 @@ def fetch_suggestions(keyword: str, limit : int = 3) -> list:
     """
     try:
         songs = []
-        response = requests.get(
-            f"https://itunes.apple.com/search?term={keyword}&media=music&entity=song&limit={limit}",
-            timeout=12
-        )
+        params = {
+            "term": keyword,
+            "media": "music",
+            "entity": "song",
+            "limit": limit,
+        }
+        response = requests.get("https://itunes.apple.com/search", params=params, timeout=12)
         response.raise_for_status()
         json_response = response.json()
         for result in json_response.get("results", []):
