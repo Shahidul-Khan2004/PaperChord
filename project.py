@@ -73,7 +73,7 @@ def add_keywords_to_sentiment(sentiment: str) -> str:
     else:
         return random.choice(["inspo", "lofi", "nature", "mood", "calm"])
 
-def fetch_suggestions(keyword: str) -> list:
+def fetch_suggestions(keyword: str, limit : int = 3) -> list:
     """
     Fetch song suggestions from the iTunes API based on the given keyword.
 
@@ -81,6 +81,8 @@ def fetch_suggestions(keyword: str) -> list:
     ----------
     keyword : str
         Keyword to search for songs on the iTunes API.
+    limit : int, optional
+        The maximum number of song suggestions to return (default is 3).
 
     Returns
     -------
@@ -90,7 +92,7 @@ def fetch_suggestions(keyword: str) -> list:
     try:
         songs = []
         response = requests.get(
-            f"https://itunes.apple.com/search?term={keyword}&media=music&entity=song&limit=3",
+            f"https://itunes.apple.com/search?term={keyword}&media=music&entity=song&limit={limit}",
             timeout=12
         )
         response.raise_for_status()
