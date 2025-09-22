@@ -106,7 +106,7 @@ def fetch_suggestions(keyword: str, limit : int = 3) -> list:
                     "thumbnail": result.get("artworkUrl100", None),
                 }
             )
-        return songs
+        return songs[:limit]
     except requests.RequestException as e:
         print(f"Itunes not responding: {e}")
         return []
