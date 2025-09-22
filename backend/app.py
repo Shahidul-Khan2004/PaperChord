@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel, Field
 from project import fetch_suggestions, add_keywords_to_sentiment, analyze_sentiment
 
-app = FastAPI()
+app = FastAPI(title="PaperChord API", version="1.0", description="An API to suggest songs based on the sentiment of input text.")
 
 class SongRequest(BaseModel):
     text: str = Field(..., example="I am feeling great today!", description= "Input text to analyze sentiment and fetch song suggestions.")
