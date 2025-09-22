@@ -95,10 +95,13 @@ def fetch_suggestions(keyword: str, limit : int = 3) -> list:
     """
     try:
         songs = []
-        response = requests.get(
-            f"https://itunes.apple.com/search?term={keyword}&media=music&entity=song&limit={limit}",
-            timeout=12
-        )
+        params = {
+            "term": keyword,
+            "media": "music",
+            "entity": "song",
+            "limit": limit,
+        }
+        response = requests.get("https://itunes.apple.com/search", params=params, timeout=12)
         response.raise_for_status()
         json_response = response.json()
         for result in json_response.get("results", []):

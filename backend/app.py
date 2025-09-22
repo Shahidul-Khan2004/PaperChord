@@ -13,7 +13,12 @@ class SongResponse(BaseModel):
     artist: str
     url: str | None = None
     thumbnail: str | None = None
-@app.post("/songs", response_model=list[SongResponse], tags=["suggestions"])
+
+@app.get("/health", tags=["system"])
+def health_check():
+    return {"status": "ok"}
+
+@app.post("/songs", response_model=list[SongResponse], response_model_exclude_none=True, tags=["suggestions"])
 def suggest_songs(request: SongRequest):
     songs = fetch_suggestions(add_keywords_to_sentiment(analyze_sentiment(request.text)), request.limit or 3)
     return songs
