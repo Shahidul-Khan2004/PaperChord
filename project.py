@@ -18,7 +18,7 @@ def main():
     parser.add_argument("--output", type=str, help="Output text for song suggestions")
     parser.add_argument("--limit", type=int, help="Number of songs to get")
     args = parser.parse_args()
-    if args.limit:
+    if args.limit and args.limit > 0:
         res = fetch_suggestions(add_keywords_to_sentiment(analyze_sentiment(args.text)), args.limit)
     else:
         res = fetch_suggestions(add_keywords_to_sentiment(analyze_sentiment(args.text)))
@@ -76,45 +76,6 @@ def add_keywords_to_sentiment(sentiment: str) -> str:
         return random.choice(["sad song", "blue", "heart break", "memories"])
     else:
         return random.choice(["inspo", "lofi", "nature", "mood", "calm"])
-
-def fetch_suggestions(keyword: str) -> list:
-    """
-    Fetch song suggestions from the iTunes API based on the given keyword.
-
-    Parameters
-    ----------
-    keyword : str
-        Keyword to search for songs on the iTunes API.
-
-    Returns
-    -------
-    list of dict
-        A list of dictionaries, each containing information about a song (song name, artist, url, thumbnail).
-    """
-    try:
-        songs = []
-        response = requests.get(
-            f"https://itunes.apple.com/search?term={keyword}&media=music&entity=song&limit=3",
-            timeout=12
-        )
-        response.raise_for_status()
-        json_response = response.json()
-        for result in json_response.get("results", []):
-            songs.append(
-                {
-                    "song": result.get("trackName", "N/A"),
-                    "artist": result.get("artistName", "N/A"),
-                    "url": result.get("trackViewUrl", None),
-                    "thumbnail": result.get("artworkUrl100", None),
-                }
-            )
-        return songs
-    except requests.RequestException as e:
-        print(f"Itunes not responding: {e}")
-        return []
-    except Exception as e:
-        print(f"Unexpected error: {e}")
-        return []
 
 def fetch_suggestions(keyword: str, limit : int = 3) -> list:
     """
