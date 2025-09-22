@@ -5,6 +5,14 @@ import requests
 import argparse
 
 def main():
+    """
+    Parses command-line arguments, analyzes the sentiment of input text,
+    fetches song suggestions based on sentiment, and outputs the results.
+
+    Returns
+    -------
+    None
+    """
     parser = argparse.ArgumentParser(description="Get song suggestions based on text.")
     parser.add_argument("--text", type=str, help="Input text for song suggestions", required=True)
     parser.add_argument("--output", type=str, help="Output text for song suggestions")
@@ -17,7 +25,19 @@ def main():
         print(json.dumps(res, indent=2, ensure_ascii=False))
 
 def analyze_sentiment(text: str) -> str:
-    """Analyze the sentiment of the given text and return 'Positive', 'Negative', or 'Neutral'."""
+    """
+    Analyze the sentiment of the given text and return a sentiment label.
+
+    Parameters
+    ----------
+    text : str
+        The input text to analyze.
+
+    Returns
+    -------
+    str
+        'Positive', 'Negative', or 'Neutral' based on sentiment analysis.
+    """
     try:
         analyzer = SentimentIntensityAnalyzer()
     except LookupError:
@@ -33,7 +53,19 @@ def analyze_sentiment(text: str) -> str:
         return "Neutral"
 
 def add_keywords_to_sentiment(sentiment: str) -> str:
-    """Assign a random keyword based on the relevant sentiment."""
+    """
+    Assign a random keyword based on the relevant sentiment.
+
+    Parameters
+    ----------
+    sentiment : str
+        The sentiment label ('Positive', 'Negative', or 'Neutral').
+
+    Returns
+    -------
+    str
+        A keyword associated with the provided sentiment.
+    """
     if sentiment == "Positive":
         return random.choice(["good mood", "happy", "chill vibes", "feel good", "relaxing"])
     elif sentiment == "Negative":
@@ -41,14 +73,29 @@ def add_keywords_to_sentiment(sentiment: str) -> str:
     else:
         return random.choice(["inspo", "lofi", "nature", "mood", "calm"])
 
-def fetch_suggestions(str: str) -> list:
-    """Fetch song suggestions from the iTunes API based on the given keyword."""
+def fetch_suggestions(keyword: str) -> list:
+    """
+    Fetch song suggestions from the iTunes API based on the given keyword.
+
+    Parameters
+    ----------
+    keyword : str
+        Keyword to search for songs on the iTunes API.
+
+    Returns
+    -------
+    list of dict
+        A list of dictionaries, each containing information about a song (song name, artist, url, thumbnail).
+    """
     try:
         songs = []
-        response = requests.get(f"https://itunes.apple.com/search?term={str}&media=music&entity=song&limit=3", timeout=12)
+        response = requests.get(
+            f"https://itunes.apple.com/search?term={keyword}&media=music&entity=song&limit=3",
+            timeout=12
+        )
         response.raise_for_status()
         json_response = response.json()
-        for result in json_response["results"]:
+        for result in json_response.get("results", []):
             songs.append(
                 {
                     "song": result.get("trackName", "N/A"),
@@ -64,7 +111,6 @@ def fetch_suggestions(str: str) -> list:
     except Exception as e:
         print(f"Unexpected error: {e}")
         return []
-
 
 if __name__ == "__main__":
     main()
