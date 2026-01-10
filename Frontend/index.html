@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PaperChord</title>
+    <script src = "app.js"> </script>
     <link rel="stylesheet" href="styles.css">
 
 </head>
@@ -28,7 +29,7 @@
         <form action="" id="text-form">
             <label for="text-input" name="text-input-label" id="text-input-label">Enter your text below: </label><br>
             <textarea class="centered-textarea" id="text-input" placeholder="Type your text here..." required></textarea>
-            <span> <button type="submit" id="submit-button">Submit</button></span>
+            <span> <button type="submit" id="submit-button" onclick="hello()">Submit</button></span>
             <span> <button type="button" id="clear-button">Clear</button></span>
 
             <p id ="status" aria-live="polite"></p>
