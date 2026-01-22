@@ -1,29 +1,20 @@
 from fastapi import FastAPI
-from contextlib import asynccontextmanager
-from app.db.session import db
-from app.core.config import settings
+from app.api.v1.endpoints.health import router as health_router
+from app.api.v1.endpoints.auth import router as auth_router
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Startup: Connect to DB
-    await db.connect()
-    yield
-    # Shutdown: Disconnect DB
-    await db.disconnect()
+# Create FastAPI instance
+app = FastAPI(title="PaperChord API", version="1.0.0")
 
-app = FastAPI(
-    title=settings.PROJECT_NAME,
-    lifespan=lifespan
-)
+# Include health check router
+app.include_router(health_router)
 
-@app.get("/health")
-def health_check():
-    return {"status": "ok"}
+# Include auth router
+app.include_router(auth_router)
 
+# Root endpoint
 @app.get("/")
 async def root():
     return {"message": "PaperChord API is running"}
-
 
 if __name__ == "__main__":
     import uvicorn
